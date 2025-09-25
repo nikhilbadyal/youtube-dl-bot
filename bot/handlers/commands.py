@@ -5,7 +5,6 @@ import random
 import yt_dlp
 from aiogram import F, Router, exceptions, types
 from aiogram.filters import CommandStart
-
 from enums import Links, Messages
 
 router = Router()
@@ -13,15 +12,26 @@ router = Router()
 
 async def download_video(url: str) -> str:
     opts = {
-        "format": "bv*+ba/b",
+        "format": "bestvideo[vcodec^=avc1][ext=mp4]+bestaudio[acodec^=mp4a]/mp4",
         "merge-output-format": "mp4",
+        "outtmpl": "%(title)s.%(ext)s",
         "noplaylist": True,
         "quiet": True,
+        "postprocessors": [
+            {
+                "key": "FFmpegVideoConvertor",
+                "preferedformat": "mp4",
+            }
+        ],
     }
 
     with yt_dlp.YoutubeDL(opts) as ydl:
         info = ydl.extract_info(url, download=True)
-        return ydl.prepare_filename(info)
+        return {
+            "filename": ydl.prepare_filename(info),
+            "width": info.get("width", 0),
+            "height": info.get("height", 0),
+        }
 
 
 def link_button(text: str, url: str) -> types.InlineKeyboardMarkup:
@@ -29,34 +39,36 @@ def link_button(text: str, url: str) -> types.InlineKeyboardMarkup:
 
 
 @router.message(F.text.startswith(tuple(Links.STANDART.value)))
-async def handle_download(message: types.Message):
-    # --- Preparing ---
-    await message.react([types.reaction_type_emoji.ReactionTypeEmoji(emoji="👀")])
-    msg = await message.answer(Messages.VideoDownloading.f(url=message.text))
+async def handle_standart_download(message: types.Message):
+    url = message.text
+    eyes_emoji = [types.reaction_type_emoji.ReactionTypeEmoji(emoji="👀")]
 
-    # --- Downloading ---
+    await message.react(eyes_emoji)
+    msg = await message.answer(Messages.VideoProcessing.value.format(url=url))
+
     try:
-        video_path = await download_video(message.text)
+        info = await download_video(url)
 
-        await msg.edit_text(Messages.VideoDownloaded.f(url=message.text))
+        await msg.edit_text(Messages.VideoSuccess.value.format(url=url))
 
         await message.answer_video(
-            video=types.FSInputFile(video_path),
-            caption=Messages.Caption.f(url=message.text),
+            video=types.FSInputFile(info["filename"]),
+            caption=Messages.Caption.value.format(url=url),
+            width=info["width"],
+            height=info["height"],
         )
 
     except exceptions.TelegramEntityTooLarge:
-        await msg.edit_text(Messages.VideoNotSent.f(url=message.text))
+        await msg.edit_text(Messages.VideoNotSent.value.format(url=url))
         return
 
     except Exception:
-        await msg.edit_text(Messages.ErrorOccured.f(url=message.text))
+        await msg.edit_text(Messages.ErrorOccured.value.format(url=url))
         return
 
-    # --- Clearing up and promoting ---
     await message.delete()
     await msg.delete()
-    os.remove(video_path)
+    os.remove(info["filename"])
 
     if random.randint(1, 5) == 1:
         promo_msg = await message.answer(Messages.Promo.value)
@@ -67,6 +79,6 @@ async def handle_download(message: types.Message):
 @router.message(CommandStart())
 async def start(message: types.Message) -> None:
     await message.answer(
-        text=Messages.Start.f(username=message.from_user.username),
+        text=Messages.Start.format(username=message.from_user.username),
         reply_markup=link_button("📰 A Telegram channel with news", "t.me/anekobtw_c"),
     )

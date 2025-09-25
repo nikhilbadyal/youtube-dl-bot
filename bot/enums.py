@@ -26,11 +26,10 @@ class Links(Enum):
 
 
 class Messages(Enum):
-    VideoDownloading = "<code>{url}</code>\n\n🟡 Your video is being processed..."
-    VideoDownloaded = "<code>{url}</code>\n\n🟢 Your video has been successfully downloaded. Sending..."
-
-    VideoNotSent = "<code>{url}</code>\n\n🔴 Unfortunately, the video exceeds Telegram limits."
-    ErrorOccured = "<code>{url}</code>\n\n🔴 An error occurred during the download."
+    VideoProcessing = "<code>{url}</code>\n\n⏳ Your video is being processed..."
+    VideoSuccess = "<code>{url}</code>\n\n✅ Your video has been successfully downloaded. Sending..."
+    VideoNotSent = "<code>{url}</code>\n\n❌ Unfortunately, the video exceeds Telegram limits."
+    VideoError = "<code>{url}</code>\n\n⚠️ An error occurred during the download."
 
     Promo = (
         "Hi! I'm <b>@free_yt_dl_bot</b> — 100% free, no ads, no forced subscriptions.\n\n"
@@ -50,6 +49,3 @@ class Messages(Enum):
 
         "🙏 <b>Please don’t block the bot</b> — it needs to message you when the download is ready."
     )  # fmt: skip
-
-    def f(self, **kwargs) -> str:
-        return self.value.format(**kwargs)
