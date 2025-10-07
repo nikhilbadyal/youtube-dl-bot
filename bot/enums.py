@@ -32,13 +32,13 @@ class Messages(Enum):
     VideoError = "<code>{url}</code>\n\n⚠️ An error occurred during the download."
 
     Promo = (
-        "Hi! I'm <b>@free_yt_dl_bot</b> — 100% free, no ads, no forced subscriptions.\n\n"
+        "Hi! I'm <b>@instagramDownloader2_bot</b> — 100% free, no ads, no forced subscriptions.\n\n"
         "If you like my work, support me by checking out my "
-        "<b><a href='https://t.me/anekobtw_c'>Telegram news channel</a></b> 😊\n\n"
+        "<b><a href='https://t.me/nikhilbadyal_projects'>Telegram news channel</a></b> 😊\n\n"
         "<b>This message will self-delete in 15 seconds.</b>"
     )  # fmt: skip
 
-    Caption = "<b><i><a href='https://t.me/free_yt_dl_bot'>via</a> | <a href='{url}'>link</a></i></b>"
+    Caption = "<b><i><a href='https://t.me/instagramDownloader2_bot'>via</a> | <a href='{url}'>link</a></i></b>"
 
     Start = (
         "Hello, @{username}! Just send the link to the video.\n\n"

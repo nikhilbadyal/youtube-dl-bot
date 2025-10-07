@@ -9,6 +9,9 @@ from yt_dlp import YoutubeDL
 
 os.makedirs("files", exist_ok=True)
 
+# Get public URL from environment variable or use default
+public_url = os.getenv("PUBLIC_URL", "http://localhost:8000")
+
 app = FastAPI()
 
 

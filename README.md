@@ -10,6 +10,8 @@ A Telegram bot for downloading videos from different platforms directly in your 
 
 ## 🛠️ Setup
 
+### Traditional Setup
+
 **1. Install Python**
 
 **2. Install [ffmpeg](https://ffmpeg.org/download.html)**
@@ -20,7 +22,7 @@ A Telegram bot for downloading videos from different platforms directly in your 
 
 ```
 TOKEN = your_telegram_bot_token_here
-``` 
+```
 
 **5. Clone and install dependencies:**
 
@@ -34,6 +36,49 @@ $ pip install -r requirements.txt
 
 ```bash
 $ python main.py
+```
+
+### Docker Setup (Recommended)
+
+**1. Acquire bot token from [@BotFather](https://t.me/BotFather)**
+
+**2. Clone the repository:**
+
+```bash
+$ git clone https://github.com/anekobtw/youtube-dl-bot.git
+$ cd youtube-dl-bot
+```
+
+**3. Create a `.env` file in the root directory with:**
+
+```bash
+cp .env.example .env
+```
+
+Edit the `.env` file and add your bot token:
+```
+TOKEN=your_telegram_bot_token_here
+PUBLIC_URL=http://localhost:8000
+```
+
+**4. Build and run with Docker Compose:**
+
+```bash
+$ docker-compose up -d
+```
+
+This will start both the API service (port 8000) and the bot service.
+
+**5. Check logs:**
+
+```bash
+$ docker-compose logs -f bot
+```
+
+**6. Stop the services:**
+
+```bash
+$ docker-compose down
 ```
 
 ## Contributing 🤝

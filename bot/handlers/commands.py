@@ -63,7 +63,7 @@ async def handle_standart_download(message: types.Message):
         return
 
     except Exception:
-        await msg.edit_text(Messages.ErrorOccured.value.format(url=url))
+        await msg.edit_text(Messages.VideoError.value.format(url=url))
         return
 
     await message.delete()
@@ -79,6 +79,6 @@ async def handle_standart_download(message: types.Message):
 @router.message(CommandStart())
 async def start(message: types.Message) -> None:
     await message.answer(
-        text=Messages.Start.format(username=message.from_user.username),
-        reply_markup=link_button("📰 A Telegram channel with news", "t.me/anekobtw_c"),
+        text=Messages.Start.value.format(username=message.from_user.username),
+        reply_markup=link_button("📰 A Telegram channel with news", "t.me/nikhilbadyal_projects"),
     )
